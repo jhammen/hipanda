@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 0.4//EN" "http://www.getahead.ltd.uk/dwr/dwr.dtd">
+<dwr>
+  <allow>
+    <create creator="new" javascript="PandaServer">
+      <param name="class" value="com.hipanda.server.PandaServer"/>
+    </create>
+    <convert converter="bean" match="com.hipanda.server.Panda"/>
+    <convert converter="bean" match="com.hipanda.server.Action"/>
+  </allow>
+</dwr>

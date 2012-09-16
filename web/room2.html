@@ -1,0 +1,51 @@
+<html>
+<head>
+<style>
+.panda {
+	position: absolute;
+	width: 60;
+	height: 90;
+}
+
+#out {
+	position: absolute;
+	height: 500;
+	width: 800;
+	border: 1px solid black;
+}
+
+#chatbox {
+	position: absolute;
+	height: 100;
+	width: 400px;
+	top: 501;
+}
+
+#errordiv {
+	position: absolute;
+	top: 550;
+	height: 150;
+	width: 500px;
+	border: 1px solid red;
+	overflow: auto;
+}
+</style>
+<script src="js/yahoo-debug.js"></script>
+<script src="js/dom-debug.js"></script>
+<script src="js/event-debug.js"></script>
+<script src="js/animation-debug.js"></script>
+<script type="text/javascript" src="amq/amq.js"></script>
+<script type="text/javascript">amq.uri='amq';</script>
+<script type="text/javascript" src="js/panda.js"></script>
+<script type="text/javascript" src="js/room.js"></script>
+<script></script>
+</head>
+<body onLoad="onLoad()" onUnload="">
+<div id="out"></div>
+<div id="chatbox">
+<form action="#"><input id="chatText" onChange="chat()" size="64" />
+</form>
+</div>
+<div id="errordiv">Debug Messages</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<html>
+<head>
+
+<title>Hi Panda! Basketball</title>
+<style>
+.panda {
+	position: absolute;
+	width: 60;
+	height: 90;
+}
+
+#court {
+	position: absolute;
+	height: 500;
+	width: 800;
+	border: 1px solid black;
+}
+</style>
+
+<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/panda.js"></script>
+<script>
+function jumpLeft(panda, offset) {
+	$(panda).css({"left": $(panda).position().left + offset}); //, 10);
+}
+function jumpUp(panda, offset) {
+	$(panda).css({"top": $(panda).position().top + offset}); //, 10);
+}
+$(document).ready(function() {
+	$("#court").click(function() {
+		alert("use arrow keys to play");
+	});
+	$(document).keydown(function(e) {	
+		switch(e.keyCode) {
+		case 37: jumpLeft(computer, -15); break;
+		case 38: jumpUp(computer, -15); break;
+		case 39: jumpLeft(computer, 15); break;
+		case 40: jumpUp(computer, 15); break;
+		default: break;
+	}	
+	});
+	var computer = createPanda("computer", $("#court"));
+	 $("#computer").animate({  left: "200px", top: "300px" }, 2000 );
+	showBubble(computer, "ready?");
+});
+</script>
+</head>
+<body>
+<div id="court"></div>
+</body>
+</html>

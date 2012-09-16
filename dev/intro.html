@@ -1,0 +1,111 @@
+<html>
+<head>
+<style>
+.panda { position: absolute; width: 60; height: 90; }
+#out { position: absolute; height: 500; width: 800; border: 1px solid black; }
+#chatbox { position: absolute; height: 100: width: 400px; top: 501; }
+</style>
+<script type='text/javascript' src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/interface/PandaServer.js'></script>
+<script src="js/yahoo-debug.js"></script>
+<script src="js/dom-debug.js"></script>
+<script src="js/event-debug.js"></script>
+<script src="js/animation-debug.js"></script>
+<script type="text/javascript">
+
+var myId;
+var pandas;
+
+function gotId(id) {
+	myId = id;
+	PandaServer.getPandas(initPandas);
+}
+
+function initPandas(ps) {
+	pandas = ps;
+	for(var index in pandas) {
+		var panda = pandas[index];
+		createPanda(panda);
+	}
+    setTimeout("updatePandas()", 1000);
+}
+
+function updatePandas() {
+	PandaServer.getActions(myId, processActions);
+}
+
+function processActions(actions) {
+	for(var index in actions) {
+		var action = actions[index];
+	 	if(action.type == "ACTION_TYPE_ENTER") {
+	 		createPanda(action.panda);
+	 	}
+	 	else if(action.type == "ACTION_TYPE_MOVE") {
+	   		var anim = new YAHOO.util.Motion(action.pandaId, { points: { to: [action.left, action.top] } });
+	 		anim.animate();
+	 	}
+	 	else if(action.type == "ACTION_TYPE_CHAT") {
+	 		var chatBubble = document.getElementById('chat' + action.pandaId);
+	 		chatBubble.style.opacity = 100;
+	 		chatBubble.innerHTML = action.message;
+	 		var anim = new YAHOO.util.Anim(chatBubble, { opacity: { to: 0 } }, action.message.length, YAHOO.util.Easing.easeOut);
+	 		anim.animate();
+	 	}
+	 	else if(action.type == "ACTION_TYPE_LEAVE") {
+	 		var div = document.getElementById(action.pandaId);
+	 		document.getElementById('out').removeChild(div);
+	 	}
+	}
+	setTimeout("updatePandas()", 1000);
+}
+
+function createPanda(panda) {
+	var div = document.createElement('div');
+	div.id = panda.id;
+	div.className = "panda";
+	div.style.top = panda.top;
+	div.style.left = panda.left;
+	var chatBubble = document.createElement('div');
+	chatBubble.id = "chat" + panda.id;
+	div.appendChild(chatBubble);
+	var avatar = document.createElement('img');
+	avatar.src = "img/panda.png";
+	div.appendChild(avatar);
+	//div.style.backgroundImage = "url(img/panda.png)";
+	document.getElementById('out').appendChild(div);
+}
+    
+function onLoad() {
+	PandaServer.login(gotId);
+}
+
+function moveMe(evt) {
+	var anim = new YAHOO.util.Motion(myId, { points: { to: [evt.clientX-30, evt.clientY-30] } });
+	anim.animate();
+	PandaServer.updateLocation(myId, evt.clientY-30, evt.clientX-30);
+}
+
+function chat() {
+	var chatText = document.getElementById("chatText");
+	PandaServer.chat(myId, chatText.value);
+	chatText.value = "";
+}
+
+YAHOO.util.Event.on('out', 'click', moveMe, null, true);
+window.onbeforeunload = function() { PandaServer.exit(myId); }
+</script>
+</head>
+<body onLoad="onLoad()" onUnload="">
+<div id="out">
+<!-- 
+   <div id="demo"><img src="img/panda.png"/></div>  
+   <div id="target"></div>
+ -->
+</div>
+<div id="chatbox">
+<form action="#">
+	<input id="chatText" onChange="chat()" size="64"/>
+</form>
+</div>
+</body>
+</html>
